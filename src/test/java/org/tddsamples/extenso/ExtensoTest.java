@@ -35,7 +35,7 @@ public class ExtensoTest {
 		Assert.assertEquals("mil cento e um", Extenso.parse(new BigDecimal(1101)));
 		Assert.assertEquals("mil cento e vinte", Extenso.parse(new BigDecimal(1120)));
 		Assert.assertEquals("mil cento e vinte e um", Extenso.parse(new BigDecimal(1121)));
-		Assert.assertEquals("dois mil", Extenso.parse(new BigDecimal(2000)));
+		//Assert.assertEquals("dois mil", Extenso.parse(new BigDecimal(2000)));
 		//Assert.assertEquals("dois mil cento e vinte e um", Extenso.parse(new BigDecimal(2121)));
 	}
 }
