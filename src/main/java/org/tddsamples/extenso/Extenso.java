@@ -22,11 +22,7 @@ public class Extenso {
 	}
 
 	public static String parse(BigDecimal n) {
-		String s = constantes.get(n);
-		if (s == null) {
-			s = getStringDecimo(n, 0);
-		}
-		return s.replace("e cem e", "cento e");
+		return getStringDecimo(n, 0).replace("e cem e", "cento e");
 	}
 
 	private static String getStringUnidade(BigDecimal n, BigDecimal decimo) {
@@ -39,11 +35,9 @@ public class Extenso {
 	}
 
 	private static String getStringDecimo(BigDecimal numero, int pow) {
-		String s;
-		if (numero.compareTo(new BigDecimal(100)) == 0) {
+		String s = constantes.get(numero);
+		if (pow > 0 && numero.compareTo(new BigDecimal(100)) == 0) {
 			s = "cento";
-		} else {
-			s = constantes.get(numero);
 		}
 
 		if (s == null) {
