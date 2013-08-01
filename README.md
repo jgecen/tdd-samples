@@ -14,9 +14,9 @@ Fell free to share and use the code and give me your feedback !!
 To import into Eclipse
 -------------------
 
-mvn eclipse:clean eclipse:eclipse
+    mvn eclipse:clean eclipse:eclipse
 
 To build an run all tests
 -------------------
 
-mvn clean install
+    mvn clean install
