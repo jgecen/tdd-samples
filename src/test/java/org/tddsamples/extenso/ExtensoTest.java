@@ -5,6 +5,13 @@ import java.math.BigDecimal;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Given an integer from 0 to 1 million return it's textual description in
+ * pt-BR.
+ *
+ * @author ivandeaguirre
+ *
+ */
 public class ExtensoTest {
 
 	@Test
