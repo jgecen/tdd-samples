@@ -22,7 +22,8 @@ public class Extenso {
 	}
 
 	public static String parse(BigDecimal n) {
-		return getStringFromTenth(n, 0).replace("e cem e", "cento e");
+		return getStringFromTenth(n, 0).replace("e cem e", "cento e").replace(
+				"dez e dois", "doze");
 	}
 
 	private static String getStringUnity(BigDecimal n, BigDecimal tenth) {
@@ -42,14 +43,27 @@ public class Extenso {
 
 		if (s == null) {
 			BigDecimal tenth = getTenth(n, pow + 1);
-			s = getStringFromTenth(tenth, pow + 1) + getStringUnity(n, tenth);
+			if (tenth.compareTo(BigDecimal.ZERO) == 0) {
+				s = getConstant(n, pow);
+			} else {
+				s = getStringFromTenth(tenth, pow + 1) + getStringUnity(n, tenth);
+			}
+		}
+		return s;
+	}
+
+	private static String getConstant(BigDecimal n, int pow) {
+		BigDecimal factor = new BigDecimal(10).pow(pow);
+		String s = constants.get(n.divideToIntegralValue(factor));
+		if (pow == 3) {
+			s = s + " mil";
 		}
 		return s;
 	}
 
 	private static BigDecimal getTenth(BigDecimal n, int pow) {
 		BigDecimal factor = new BigDecimal(10).pow(pow);
-		BigDecimal dezena = n.divideToIntegralValue(factor).multiply(factor);
-		return dezena;
+		BigDecimal tenth = n.divideToIntegralValue(factor).multiply(factor);
+		return tenth;
 	}
 }
