@@ -6,7 +6,11 @@ public class TicTacToe {
 
 	private String playerInTurn;
 
-	public void setPlayers(String string, String string2) {
+	private String[] players = new String[2];
+
+	public void setPlayers(String player1, String player2) {
+		this.players[0] = player1;
+		this.players[1] = player2;
 	}
 
 	public TicTacToe player(String player) {
@@ -15,11 +19,16 @@ public class TicTacToe {
 	}
 
 	public boolean play(int i, int j) {
-		if (occupied(i, j)) {
+		if (validPlayerInTurn() || occupied(i, j)) {
 			return false;
 		}
 		table[i][j] = playerInTurn;
 		return true;
+	}
+
+	private boolean validPlayerInTurn() {
+		return !playerInTurn.equals(players[0])
+				&& !playerInTurn.equals(players[1]);
 	}
 
 	public String winner() {
@@ -45,18 +54,23 @@ public class TicTacToe {
 	}
 
 	private String columnFull() {
-		return checkFull(0, 0, 1, 0, 2, 0);
+		for (int i = 0; i <= 2; i++) {
+			String winner = checkFull(0, i, 1, i, 2, i);
+			if (winner != null) {
+				return winner;
+			}
+		}
+		return null;
 	}
 
 	private String lineFull() {
-		String winner = checkFull(0, 0, 0, 1, 0, 2);
-		if (winner == null) {
-			winner = checkFull(1, 0, 1, 1, 1, 2);
+		for (int i = 0; i <= 2; i++) {
+			String winner = checkFull(i, 0, i, 1, i, 2);
+			if (winner != null) {
+				return winner;
+			}
 		}
-		if (winner == null) {
-			winner = checkFull(2, 0, 2, 1, 2, 2);
-		}
-		return winner;
+		return null;
 	}
 	
 	private String checkFull(int a, int b, int c, int d, int e, int f) {
