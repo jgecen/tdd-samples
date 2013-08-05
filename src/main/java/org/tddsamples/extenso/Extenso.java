@@ -12,13 +12,13 @@ public class Extenso {
 		constants.put(BigDecimal.ZERO, "zero");
 		constants.put(BigDecimal.ONE, "um");
 		constants.put(new BigDecimal(2), "dois");
+		constants.put(new BigDecimal(3), "tres");
 		constants.put(BigDecimal.TEN, "dez");
 		constants.put(new BigDecimal(11), "onze");
 		constants.put(new BigDecimal(20), "vinte");
 		constants.put(new BigDecimal(30), "trinta");
 		constants.put(new BigDecimal(100), "cem");
 		constants.put(new BigDecimal(200), "duzentos");
-		constants.put(new BigDecimal(1000), "mil");
 	}
 
 	public static String parse(BigDecimal n) {
@@ -31,34 +31,52 @@ public class Extenso {
 		if (unity.compareTo(BigDecimal.ZERO) == 0) {
 			return "";
 		} else {
-			return " e " + constants.get(unity);
+			String s = constants.get(unity);
+			if (s == null) {
+				s =  getStringFromTenth(unity, 0);
+			}
+			return " e " + s;
 		}
 	}
 
 	private static String getStringFromTenth(BigDecimal n, int pow) {
-		String s = constants.get(n);
-		if (pow > 0 && n.compareTo(new BigDecimal(100)) == 0) {
-			s = "cento";
-		}
-
+		String s = getConstant(n, pow);
 		if (s == null) {
 			BigDecimal tenth = getTenth(n, pow + 1);
-			if (tenth.compareTo(BigDecimal.ZERO) == 0) {
-				s = getConstant(n, pow);
-			} else {
-				s = getStringFromTenth(tenth, pow + 1) + getStringUnity(n, tenth);
-			}
+			s = getStringFromTenth(tenth, pow + 1) + getStringUnity(n, tenth);
 		}
 		return s;
 	}
 
 	private static String getConstant(BigDecimal n, int pow) {
-		BigDecimal factor = new BigDecimal(10).pow(pow);
-		String s = constants.get(n.divideToIntegralValue(factor));
-		if (pow == 3) {
-			s = s + " mil";
+		String s = constants.get(n);
+		if (hundreds(n, pow)) {
+			s = "cento";
+		} else {
+			BigDecimal factor = new BigDecimal(10).pow(pow);
+			BigDecimal tenth = n.divideToIntegralValue(factor);
+
+			if (thousands(pow, tenth)) {
+				s = getStringFromTenth(tenth, 0) + " mil";
+			}
+
+			if (millions(pow, tenth)) {
+				s = getStringFromTenth(tenth, 0) + " milhao";
+			}
 		}
 		return s;
+	}
+
+	private static boolean millions(int pow, BigDecimal tenth) {
+		return pow == 6 && tenth.compareTo(new BigDecimal(999)) <= 0;
+	}
+
+	private static boolean thousands(int pow, BigDecimal tenth) {
+		return pow == 3 && tenth.compareTo(new BigDecimal(999)) <= 0;
+	}
+
+	private static boolean hundreds(BigDecimal n, int pow) {
+		return pow > 0 && n.compareTo(new BigDecimal(100)) == 0;
 	}
 
 	private static BigDecimal getTenth(BigDecimal n, int pow) {
