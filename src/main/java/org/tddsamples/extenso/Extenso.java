@@ -1,87 +1,65 @@
 package org.tddsamples.extenso;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Extenso {
 
-	private static Map<BigDecimal, String> constants;
+	private static Map<Integer, String> values = new HashMap<>();
 	static {
-		constants = new HashMap<>();
-		constants.put(BigDecimal.ZERO, "zero");
-		constants.put(BigDecimal.ONE, "um");
-		constants.put(new BigDecimal(2), "dois");
-		constants.put(new BigDecimal(3), "tres");
-		constants.put(BigDecimal.TEN, "dez");
-		constants.put(new BigDecimal(11), "onze");
-		constants.put(new BigDecimal(20), "vinte");
-		constants.put(new BigDecimal(30), "trinta");
-		constants.put(new BigDecimal(100), "cem");
-		constants.put(new BigDecimal(200), "duzentos");
+		values.put(0, "zero");
+		values.put(1, "um");
+		values.put(2, "dois");
+		values.put(3, "tres");
+		values.put(10, "dez");
+		values.put(11, "onze");
+		values.put(15, "quinze");
+		values.put(20, "vinte");
+		values.put(30, "trinta");
+		values.put(100, "cem");
+		values.put(200, "duzentos");
+		values.put(500, "quinhentos");
+		values.put(1000, "mil");
 	}
 
-	public static String parse(BigDecimal n) {
-		return getStringFromTenth(n, 0).replace("e cem e", "cento e").replace(
-				"dez e dois", "doze");
-	}
-
-	private static String getStringUnity(BigDecimal n, BigDecimal tenth) {
-		BigDecimal unity = n.subtract(tenth);
-		if (unity.compareTo(BigDecimal.ZERO) == 0) {
-			return "";
-		} else {
-			String s = constants.get(unity);
-			if (s == null) {
-				s =  getStringFromTenth(unity, 0);
-			}
-			return " e " + s;
+	public static String parse(int n) {
+		String s = values.get(n);
+		if (n > 100 && n < 1000) {
+			s = resolveCentenaDezenaUnidade(n);
 		}
-	}
-
-	private static String getStringFromTenth(BigDecimal n, int pow) {
-		String s = getConstant(n, pow);
+		if (n > 1000) {
+			int x = (n / 1000);
+			s = parse(x) + " mil " + resolveCentenaDezenaUnidade(n % 1000).trim();
+		}
 		if (s == null) {
-			BigDecimal tenth = getTenth(n, pow + 1);
-			s = getStringFromTenth(tenth, pow + 1) + getStringUnity(n, tenth);
+			s = resolveDezenaUnidade(n);
 		}
+		return s.replace("cem e", "cento e").replace("um mil", "mil").replace(" e mil", " mil").trim();
+	}
+
+	private static String resolveCentenaDezenaUnidade(int n) {
+		String s = "";
+		int x = (n / 100) * 100;
+		int dezena = n % 100;
+		if (x != 0) {
+			s = values.get(x);
+		}
+		String dezenaStr = resolveDezenaUnidade(dezena).trim();
+		s = s + (x != 0 || dezena != 0 ? " e " : "") + (dezena == 0 ? "" :  dezenaStr);
 		return s;
 	}
 
-	private static String getConstant(BigDecimal n, int pow) {
-		String s = constants.get(n);
-		if (hundreds(n, pow)) {
-			s = "cento";
-		} else {
-			BigDecimal factor = new BigDecimal(10).pow(pow);
-			BigDecimal tenth = n.divideToIntegralValue(factor);
-
-			if (thousands(pow, tenth)) {
-				s = getStringFromTenth(tenth, 0) + " mil";
-			}
-
-			if (millions(pow, tenth)) {
-				s = getStringFromTenth(tenth, 0) + " milhao";
-			}
+	private static String resolveDezenaUnidade(int n) {
+		String s = values.get(n);
+		if (s != null) {
+			return s;
 		}
+		int x = (n / 10) * 10;
+		int unidade = n % 10;
+		if (x != 0) {
+			s = values.get(x);
+		}
+		s = s + (unidade != 0 ? " e " : "") + (unidade == 0 ? "" : values.get(unidade));
 		return s;
-	}
-
-	private static boolean millions(int pow, BigDecimal tenth) {
-		return pow == 6 && tenth.compareTo(new BigDecimal(999)) <= 0;
-	}
-
-	private static boolean thousands(int pow, BigDecimal tenth) {
-		return pow == 3 && tenth.compareTo(new BigDecimal(999)) <= 0;
-	}
-
-	private static boolean hundreds(BigDecimal n, int pow) {
-		return pow > 0 && n.compareTo(new BigDecimal(100)) == 0;
-	}
-
-	private static BigDecimal getTenth(BigDecimal n, int pow) {
-		BigDecimal factor = new BigDecimal(10).pow(pow);
-		BigDecimal tenth = n.divideToIntegralValue(factor).multiply(factor);
-		return tenth;
 	}
 }

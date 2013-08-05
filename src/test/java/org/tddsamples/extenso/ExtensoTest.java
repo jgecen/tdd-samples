@@ -1,7 +1,5 @@
 package org.tddsamples.extenso;
 
-import java.math.BigDecimal;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,16 +14,27 @@ public class ExtensoTest {
 
 	@Test
 	public void test() {
-		// This sequence doesn't lead me to the right result
-		Assert.assertEquals("zero", Extenso.parse(BigDecimal.ZERO));
-		Assert.assertEquals("um", Extenso.parse(BigDecimal.ONE));
-		Assert.assertEquals("dez", Extenso.parse(BigDecimal.TEN));
-		Assert.assertEquals("onze", Extenso.parse(new BigDecimal(11)));
-		Assert.assertEquals("doze", Extenso.parse(new BigDecimal(12)));
-		Assert.assertEquals("vinte", Extenso.parse(new BigDecimal(20)));
-		Assert.assertEquals("vinte e um", Extenso.parse(new BigDecimal(21)));
+		Assert.assertEquals("zero", Extenso.parse(0));
+		Assert.assertEquals("um", Extenso.parse(1));
+		Assert.assertEquals("dez", Extenso.parse(10));
+		Assert.assertEquals("onze", Extenso.parse(11));
+		Assert.assertEquals("vinte", Extenso.parse(20));
+		Assert.assertEquals("vinte e um", Extenso.parse(21));
+		Assert.assertEquals("cento e vinte e um", Extenso.parse(121));
+		Assert.assertEquals("cem", Extenso.parse(100));
+		Assert.assertEquals("duzentos e vinte e um", Extenso.parse(221));
+		Assert.assertEquals("mil", Extenso.parse(1000));
+		Assert.assertEquals("mil duzentos e vinte e um", Extenso.parse(1221));
+		Assert.assertEquals("vinte mil duzentos e vinte e um", Extenso.parse(20221));
+		Assert.assertEquals("cem mil duzentos e vinte e um", Extenso.parse(100221));
+		Assert.assertEquals("cento e vinte mil duzentos e vinte e um", Extenso.parse(120221));
+		Assert.assertEquals("quinze mil duzentos e vinte", Extenso.parse(15220));
+		Assert.assertEquals("vinte e tres mil", Extenso.parse(23000));
+		Assert.assertEquals("vinte e tres mil e um", Extenso.parse(23001));
+
+		Assert.assertEquals("trinta e tres mil quinhentos e um", Extenso.parse(33501));
+		/*
 		Assert.assertEquals("vinte e dois", Extenso.parse(new BigDecimal(22)));
-		Assert.assertEquals("cem", Extenso.parse(new BigDecimal(100)));
 		Assert.assertEquals("cento e um", Extenso.parse(new BigDecimal(101)));
 		Assert.assertEquals("cento e vinte e um", Extenso.parse(new BigDecimal(121)));
 		Assert.assertEquals("cento e vinte e dois", Extenso.parse(new BigDecimal(122)));
@@ -52,7 +61,8 @@ public class ExtensoTest {
 		Assert.assertEquals("cem mil", Extenso.parse(new BigDecimal(100000)));
 		Assert.assertEquals("cem mil e cem", Extenso.parse(new BigDecimal(100100)));
 		Assert.assertEquals("um milhao", Extenso.parse(new BigDecimal(1000000)));
-		// TODO next Assert.assertEquals("um milhao duzentos e vinte e tres mil cento e trinta e dois", Extenso.parse(new BigDecimal(1_223_132)));
+		Assert.assertEquals("um milhao duzentos e vinte e tres mil cento e trinta e dois", Extenso.parse(new BigDecimal(1_223_132)));
+		*/
 	}
 }
 
