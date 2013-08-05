@@ -2,7 +2,7 @@ package org.tddsamples.tictactoe;
 
 public class TicTacToe {
 
-	private String[][] table = new String[3][3];
+	private Board board = new Board();
 
 	private String playerInTurn;
 
@@ -19,67 +19,18 @@ public class TicTacToe {
 	}
 
 	public boolean play(int i, int j) {
-		if (validPlayerInTurn() || occupied(i, j)) {
-			return false;
-		}
-		table[i][j] = playerInTurn;
-		return true;
+		return validPlayerInTurn() && board.play(playerInTurn, i, j);
 	}
 
 	private boolean validPlayerInTurn() {
-		return !playerInTurn.equals(players[0])
-				&& !playerInTurn.equals(players[1]);
+		return playerInTurn.equals(players[0]) || playerInTurn.equals(players[1]);
+	}
+
+	public boolean occupied(int i, int j) {
+		return board.occupied(i, j);
 	}
 
 	public String winner() {
-		String winner = lineFull();
-		if (winner == null) {
-			winner = columnFull();
-		}
-		if (winner == null) {
-			winner = diagonalFull();
-		}
-		if (winner == null) {
-			winner = otherDiagonalFull();
-		}
-		return winner;
+		return board.winner();
 	}
-
-	private String otherDiagonalFull() {
-		return checkFull(0, 2, 1, 1, 2, 0);
-	}
-
-	private String diagonalFull() {
-		return checkFull(0, 0, 1, 1, 2, 2);
-	}
-
-	private String columnFull() {
-		for (int i = 0; i <= 2; i++) {
-			String winner = checkFull(0, i, 1, i, 2, i);
-			if (winner != null) {
-				return winner;
-			}
-		}
-		return null;
-	}
-
-	private String lineFull() {
-		for (int i = 0; i <= 2; i++) {
-			String winner = checkFull(i, 0, i, 1, i, 2);
-			if (winner != null) {
-				return winner;
-			}
-		}
-		return null;
-	}
-	
-	private String checkFull(int a, int b, int c, int d, int e, int f) {
-		String winner = table[a][b];
-		return table[a][b] == winner && table[c][d] == winner
-				&& table[e][f] == winner ? winner : null;
-	}
-
-	public Boolean occupied(int i, int j) {
-		return table[i][j] != null;
-	} 	
 }
