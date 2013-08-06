@@ -11,11 +11,13 @@ public class Extenso {
 		values.put(1, "um");
 		values.put(2, "dois");
 		values.put(3, "tres");
+		values.put(9, "nove");
 		values.put(10, "dez");
 		values.put(11, "onze");
 		values.put(15, "quinze");
 		values.put(20, "vinte");
 		values.put(30, "trinta");
+		values.put(60, "sessenta");
 		values.put(100, "cem");
 		values.put(200, "duzentos");
 		values.put(500, "quinhentos");
@@ -25,14 +27,14 @@ public class Extenso {
 	public static String parse(int n) {
 		String s = values.get(n);
 		if (n > 100 && n < 1000) {
-			s = resolveCentenaDezenaUnidade(n);
+			s = new Centena(n).getAsString();
 		}
 		if (n > 1000) {
 			int x = (n / 1000);
-			s = parse(x) + " mil " + resolveCentenaDezenaUnidade(n % 1000).trim();
+			s = parse(x) + " mil " + new Centena(n % 1000).getAsString().trim();
 		}
 		if (s == null) {
-			s = resolveDezenaUnidade(n);
+			s = new Dezena(n).getAsString();
 		}
 		return fixes(s);
 	}
@@ -41,28 +43,47 @@ public class Extenso {
 		return s.replace("cem e", "cento e").replace("um mil", "mil").replace(" e mil", " mil").trim();
 	}
 
-	private static String resolveCentenaDezenaUnidade(int n) {
-		String s = "";
-		int centena = (n / 100) * 100;
-		if (centena != 0) {
-			s = values.get(centena);
+	static class Centena {
+		int centena;
+		int dezena;
+		public Centena(int n) {
+			int factor = (int) Math.pow(10, 2);
+			this.centena = (n / factor) * factor;
+			this.dezena = n % factor;
 		}
-		int dezena = n % 100;
-		String dezenaStr = dezena == 0 ? "" : resolveDezenaUnidade(dezena).trim();
-		return s + (dezena != 0 ? " e " : "") +  dezenaStr;
+		private String getCentenaAsString() {
+			return this.centena != 0 ? values.get(centena) : "";
+		}
+		private String getDezenaAsString() {
+			return this.dezena == 0 ? "" : new Dezena(this.dezena).getAsString();
+		}
+		String getAsString() {
+			return getCentenaAsString() + (this.dezena != 0 ? " e " : "") +  getDezenaAsString();	
+		}
 	}
 
-	private static String resolveDezenaUnidade(int n) {
-		String s = values.get(n);
-		if (s != null) {
-			return s;
+	static class Dezena {
+		int dezena;
+		int unidade;
+		int n;
+		public Dezena(int n) {
+			int factor = (int) Math.pow(10, 1);
+			this.dezena = (n / factor) * factor;
+			this.unidade = n % factor;
+			this.n = n;
 		}
-		int dezena = (n / 10) * 10;
-		if (dezena != 0) {
-			s = values.get(dezena);
+		private String getDezenaAsString() {
+			return dezena != 0 ? values.get(dezena) : "";
 		}
-		int unidade = n % 10;
-		String unidadeStr = unidade == 0 ? "" : values.get(unidade);
-		return s + (unidade != 0 ? " e " : "") + unidadeStr;
+		private String getUnidadeAsString() {
+			return unidade == 0 ? "" : values.get(unidade);
+		}
+		String getAsString() {
+			String s = values.get(n);
+			if (s != null) {
+				return s;
+			}
+			return getDezenaAsString() + (unidade != 0 ? " e " : "") + getUnidadeAsString();	
+		}
 	}
 }

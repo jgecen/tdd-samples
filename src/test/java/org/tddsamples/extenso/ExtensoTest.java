@@ -23,8 +23,10 @@ public class ExtensoTest {
 		Assert.assertEquals("cento e vinte e um", Extenso.parse(121));
 		Assert.assertEquals("cem", Extenso.parse(100));
 		Assert.assertEquals("duzentos e vinte e um", Extenso.parse(221));
+		Assert.assertEquals("quinhentos e sessenta", Extenso.parse(560));
 		Assert.assertEquals("mil", Extenso.parse(1000));
 		Assert.assertEquals("mil duzentos e vinte e um", Extenso.parse(1221));
+		Assert.assertEquals("nove mil duzentos e vinte e um", Extenso.parse(9221));
 		Assert.assertEquals("vinte mil duzentos e vinte e um", Extenso.parse(20221));
 		Assert.assertEquals("cem mil duzentos e vinte e um", Extenso.parse(100221));
 		Assert.assertEquals("cento e vinte mil duzentos e vinte e um", Extenso.parse(120221));
