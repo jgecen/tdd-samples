@@ -34,19 +34,22 @@ public class Extenso {
 		if (s == null) {
 			s = resolveDezenaUnidade(n);
 		}
+		return fixes(s);
+	}
+
+	private static String fixes(String s) {
 		return s.replace("cem e", "cento e").replace("um mil", "mil").replace(" e mil", " mil").trim();
 	}
 
 	private static String resolveCentenaDezenaUnidade(int n) {
 		String s = "";
-		int x = (n / 100) * 100;
-		int dezena = n % 100;
-		if (x != 0) {
-			s = values.get(x);
+		int centena = (n / 100) * 100;
+		if (centena != 0) {
+			s = values.get(centena);
 		}
-		String dezenaStr = resolveDezenaUnidade(dezena).trim();
-		s = s + (x != 0 || dezena != 0 ? " e " : "") + (dezena == 0 ? "" :  dezenaStr);
-		return s;
+		int dezena = n % 100;
+		String dezenaStr = dezena == 0 ? "" : resolveDezenaUnidade(dezena).trim();
+		return s + (dezena != 0 ? " e " : "") +  dezenaStr;
 	}
 
 	private static String resolveDezenaUnidade(int n) {
@@ -54,12 +57,12 @@ public class Extenso {
 		if (s != null) {
 			return s;
 		}
-		int x = (n / 10) * 10;
-		int unidade = n % 10;
-		if (x != 0) {
-			s = values.get(x);
+		int dezena = (n / 10) * 10;
+		if (dezena != 0) {
+			s = values.get(dezena);
 		}
-		s = s + (unidade != 0 ? " e " : "") + (unidade == 0 ? "" : values.get(unidade));
-		return s;
+		int unidade = n % 10;
+		String unidadeStr = unidade == 0 ? "" : values.get(unidade);
+		return s + (unidade != 0 ? " e " : "") + unidadeStr;
 	}
 }
